@@ -5,13 +5,16 @@ import com.ziad.task.model.dto.UserDto;
 import com.ziad.task.model.entity.User;
 import com.ziad.task.model.request.AddUserRequest;
 import com.ziad.task.model.request.UpdateUserRequest;
+import com.ziad.task.model.response.UserTasksResponse;
 import com.ziad.task.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -29,6 +32,8 @@ public class UserService implements IUserService {
         return userMapper.toDto(userRepository.save(savedUser));
     }
 
+    @Modifying
+    @Transactional
     @Override
     public UserDto updateUser(UUID id, UpdateUserRequest user) {
         var oldUser = userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
@@ -36,6 +41,7 @@ public class UserService implements IUserService {
         return userMapper.toDto(userRepository.save(updatedUser));
     }
 
+    @Modifying
     @Override
     public void deleteUser(UUID userId) {
         userRepository.deleteById(userId);
@@ -49,5 +55,11 @@ public class UserService implements IUserService {
     @Override
     public Page<UserDto> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable).map(userMapper::toDto);
+    }
+
+    @Override
+    public UserTasksResponse getUserTasksById(UUID userId) {
+        var user = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        return userMapper.toUserTasks(user);
     }
 }

@@ -3,6 +3,7 @@ package com.ziad.task.controller;
 import com.ziad.task.model.dto.TaskDto;
 import com.ziad.task.model.request.AddTaskRequest;
 import com.ziad.task.model.request.UpdateTaskRequest;
+import com.ziad.task.model.response.TaskUsersResponse;
 import com.ziad.task.service.TaskService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -31,6 +32,12 @@ public class TaskController {
     @GetMapping("/{taskId}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable @Valid @NotNull @NotEmpty UUID taskId) {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
+    }
+
+    //TODO Enhance this query
+    @GetMapping("/{taskId}/users")
+    public ResponseEntity<TaskUsersResponse> getTaskUsersById(@PathVariable @Valid @NotNull @NotEmpty UUID taskId) {
+        return ResponseEntity.ok(taskService.getTaskUsersById(taskId));
     }
 
     @PostMapping

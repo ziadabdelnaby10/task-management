@@ -4,6 +4,7 @@ import com.ziad.task.mapper.TaskMapper;
 import com.ziad.task.model.request.UpdateTaskRequest;
 import com.ziad.task.model.request.AddTaskRequest;
 import com.ziad.task.model.dto.TaskDto;
+import com.ziad.task.model.response.TaskUsersResponse;
 import com.ziad.task.repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -51,5 +52,11 @@ public class TaskService implements ITaskService {
     @Override
     public Page<TaskDto> getAllTasks(Pageable pageable) {
         return taskRepository.findAll(pageable).map(taskMapper::toDto);
+    }
+
+    @Override
+    public TaskUsersResponse getTaskUsersById(UUID taskId) {
+        var task = taskRepository.findById(taskId).orElseThrow(EntityNotFoundException::new);
+        return taskMapper.toTaskUser(task);
     }
 }

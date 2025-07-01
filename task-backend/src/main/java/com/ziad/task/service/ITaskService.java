@@ -3,6 +3,7 @@ package com.ziad.task.service;
 import com.ziad.task.model.request.UpdateTaskRequest;
 import com.ziad.task.model.request.AddTaskRequest;
 import com.ziad.task.model.dto.TaskDto;
+import com.ziad.task.model.response.TaskUsersResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,4 +20,6 @@ public interface ITaskService {
     TaskDto getTaskById(UUID taskId);
 
     Page<TaskDto> getAllTasks(Pageable pageable);
+
+    TaskUsersResponse getTaskUsersById(UUID taskId);
 }
