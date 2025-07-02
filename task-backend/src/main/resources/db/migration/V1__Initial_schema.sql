@@ -1,4 +1,3 @@
-
 CREATE TABLE `t_user`
 (
     `id`         binary(16)   NOT NULL,
@@ -20,12 +19,13 @@ CREATE TABLE `t_task`
     `created_time`       datetime(6) NOT NULL,
     `deadline`           date                                 DEFAULT NULL,
     `description`        varchar(255)                         DEFAULT NULL,
+    `priority`           varchar(255) NOT NULL,
     `last_modified_time` datetime(6)                          DEFAULT NULL,
-    `task_stats`         enum ('Closed','Completed','Opened') DEFAULT NULL,
+    `task_stats`         varchar(255)                         DEFAULT NULL,
     `title`              varchar(255)                         DEFAULT NULL,
     `user_id`            binary(16)  NOT NULL,
     PRIMARY KEY (`id`),
-    KEY `FK_k7wsvv5n8a66gsr1mndqv1h6l` (`user_id`), -- Fixed key name (lowercase)
+    KEY `FK_k7wsvv5n8a66gsr1mndqv1h6l` (`user_id`),
     CONSTRAINT `FK_k7wsvv5n8a66gsr1mndqv1h6l` FOREIGN KEY (`user_id`) REFERENCES `t_user` (`id`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4

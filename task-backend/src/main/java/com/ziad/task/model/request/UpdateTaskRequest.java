@@ -15,7 +15,8 @@ public record UpdateTaskRequest(
         @NotBlank(message = "Title cannot be empty.")
         String title,
         String description,
-        Task.TaskStatus taskStats,
+        String priority,
+        String taskStats,
         LocalDate deadline
 ) implements Serializable {
 }

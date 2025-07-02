@@ -1,5 +1,6 @@
 package com.ziad.task.model.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ziad.task.model.entity.Task;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,10 +15,10 @@ public record AddTaskRequest(
         @NotBlank(message = "Title cannot be empty.")
         String title,
         String description,
-        Task.TaskStatus taskStats,
+        String priority,
+        String taskStats,
+        @JsonFormat(pattern = "yyyy-MM-dd")
         LocalDate deadline,
         @NotNull(message = "Must Provide User ID")
-        @NotEmpty(message = "User Id Cannot be empty")
-        @org.hibernate.validator.constraints.UUID
         UUID createdByUserId) implements Serializable {
 }

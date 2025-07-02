@@ -29,27 +29,37 @@ public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
     @ToString.Include
     private String title;
+
     @ToString.Include
     private String description;
+
     @ToString.Include
-    @Enumerated(EnumType.STRING)
-    private TaskStatus taskStats;
+    private String taskStats;
+
+    @ToString.Include
+    private String priority;
+
     @ToString.Include
     @CreatedDate
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdTime;
+
     @ToString.Include
     @LastModifiedDate
-    @Column(insertable = false)
+    @Column(insertable = false , updatable = true)
     private LocalDateTime lastModifiedTime;
+
     @ToString.Include
     private LocalDate deadline;
+
     @ToString.Include
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", nullable = false, updatable = false)
     private User createdBy;
+
     @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "assigned_task_user",
@@ -72,10 +82,6 @@ public class Task implements Serializable {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
-    }
-
-    public enum TaskStatus {
-        Opened, Closed, Completed
     }
 }
 

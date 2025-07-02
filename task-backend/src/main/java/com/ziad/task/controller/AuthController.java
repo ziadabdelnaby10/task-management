@@ -1,8 +1,11 @@
 package com.ziad.task.controller;
 
 import com.ziad.task.config.JwtTokenService;
+import com.ziad.task.model.dto.UserDto;
+import com.ziad.task.model.request.AddUserRequest;
 import com.ziad.task.model.request.LoginRequest;
 import com.ziad.task.model.response.AuthenticationResponse;
+import com.ziad.task.service.UserService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +28,8 @@ public class AuthController {
 
     private final JwtTokenService jwtTokenService;
 
+    private final UserService userService;
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid @NotNull LoginRequest loginRequest) {
         log.info("The User in login endpoint : {}", loginRequest != null ? loginRequest.toString() : "NONE");
@@ -39,5 +44,10 @@ public class AuthController {
         }
 
         return new ResponseEntity<>(new AuthenticationResponse(new Date(), "Bearer", jwt.toString(), 123L), HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid AddUserRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(request));
     }
 }

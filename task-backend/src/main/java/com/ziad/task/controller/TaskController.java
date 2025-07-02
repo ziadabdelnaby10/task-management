@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,13 +31,13 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
-    public ResponseEntity<TaskDto> getTaskById(@PathVariable @Valid @NotNull @NotEmpty UUID taskId) {
+    public ResponseEntity<TaskDto> getTaskById(@PathVariable @Valid @NotNull UUID taskId) {
         return ResponseEntity.ok(taskService.getTaskById(taskId));
     }
 
-    //TODO Enhance this query
+
     @GetMapping("/{taskId}/users")
-    public ResponseEntity<TaskUsersResponse> getTaskUsersById(@PathVariable @Valid @NotNull @NotEmpty UUID taskId) {
+    public ResponseEntity<TaskUsersResponse> getTaskUsersById(@PathVariable @Valid @NotNull UUID taskId) {
         return ResponseEntity.ok(taskService.getTaskUsersById(taskId));
     }
 
@@ -46,15 +47,29 @@ public class TaskController {
     }
 
     @DeleteMapping("/{taskId}")
-    public ResponseEntity<Void> deleteTask(@PathVariable @Valid @NotNull @NotEmpty UUID taskId) {
+    public ResponseEntity<Void> deleteTask(@PathVariable @Valid @NotNull UUID taskId) {
         taskService.deleteTask(taskId);
         return ResponseEntity.accepted().build();
     }
 
+    @DeleteMapping("/{taskId}/unassign/{userId}")
+    public ResponseEntity<Void> unassignTask(@PathVariable @Valid @NotNull UUID taskId, @PathVariable @Valid @NotNull UUID userId) {
+        taskService.unAssignTask(taskId , userId);
+        return ResponseEntity.accepted().build();
+    }
+
     @PutMapping("/{taskId}")
-    public ResponseEntity<TaskDto> updateTask(@PathVariable @Valid @NotNull @NotEmpty UUID taskId, @RequestBody @Valid UpdateTaskRequest request) {
+    public ResponseEntity<TaskDto> updateTask(@PathVariable @Valid @NotNull UUID taskId, @RequestBody @Valid UpdateTaskRequest request) {
         return ResponseEntity.ok(taskService.updateTask(taskId, request));
     }
 
-    //TODO assign users
+    @PutMapping("/{taskId}/assign-user/{userId}")
+    public ResponseEntity<TaskDto> assignUser(@PathVariable @Valid @NotNull UUID taskId, @PathVariable @Valid @NotNull UUID userId) {
+        return ResponseEntity.ok(taskService.assignTaskToUser(taskId , userId));
+    }
+
+    @PutMapping("/{taskId}/assign-users")
+    public ResponseEntity<TaskDto> assignUsers(@PathVariable @Valid @NotNull UUID taskId, @RequestBody @Valid List<UUID> userIds) {
+        return ResponseEntity.ok(taskService.assignTaskToUsers(taskId , userIds));
+    }
 }

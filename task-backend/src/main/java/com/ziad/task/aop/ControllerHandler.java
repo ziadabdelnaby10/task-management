@@ -22,7 +22,7 @@ public class ControllerHandler {
     private Map<String, String> constructResponseMsg(Exception ex, HttpStatus status) {
         Map<String, String> response = new HashMap<>();
         response.put("time", LocalDateTime.now().toString());
-        response.put("error code", status.name());
+        response.put("error code", String.valueOf(status.value()));
         response.put("error msg", status.getReasonPhrase());
         response.put("error", ex.getMessage());
         return response;

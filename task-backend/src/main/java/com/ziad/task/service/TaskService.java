@@ -6,6 +6,7 @@ import com.ziad.task.model.request.AddTaskRequest;
 import com.ziad.task.model.dto.TaskDto;
 import com.ziad.task.model.response.TaskUsersResponse;
 import com.ziad.task.repository.TaskRepository;
+import com.ziad.task.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -14,17 +15,23 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class TaskService implements ITaskService {
     private final TaskRepository taskRepository;
     private final TaskMapper taskMapper;
+    private final UserRepository userRepository;
 
     @Override
     public TaskDto addTask(AddTaskRequest task) {
         var taskEntity = taskMapper.toEntity(task);
+//        var createdUser = userRepository.getReferenceById(task.createdByUserId());//This is better with jpa because it only references the user entity but not executing a query for it
+        var createdUser = userRepository.findById(task.createdByUserId()).orElseThrow(EntityNotFoundException::new);
+        taskEntity.setCreatedBy(createdUser);
         return taskMapper.toDto(taskRepository.save(taskEntity));
     }
 
@@ -56,7 +63,34 @@ public class TaskService implements ITaskService {
 
     @Override
     public TaskUsersResponse getTaskUsersById(UUID taskId) {
-        var task = taskRepository.findById(taskId).orElseThrow(EntityNotFoundException::new);
+        var task = taskRepository.findTaskUsersById(taskId).orElseThrow(EntityNotFoundException::new);
         return taskMapper.toTaskUser(task);
+    }
+
+    @Transactional
+    @Override
+    public TaskDto assignTaskToUser(UUID taskId, UUID userId) {
+        var task = taskRepository.findById(taskId).orElseThrow(EntityNotFoundException::new);
+        var taskUser = userRepository.findById(userId).orElseThrow(EntityNotFoundException::new);
+        task.getAssignedToUsers().add(taskUser);
+        return taskMapper.toDto(taskRepository.save(task));
+    }
+
+    @Transactional
+    @Override
+    public TaskDto assignTaskToUsers(UUID taskId, List<UUID> userIds) {
+        var task = taskRepository.findById(taskId).orElseThrow(EntityNotFoundException::new);
+        var users = userIds.stream().map(userRepository::getReferenceById).collect(Collectors.toSet());
+        task.setAssignedToUsers(users);
+        return taskMapper.toDto(taskRepository.save(task));
+    }
+
+    @Modifying
+    @Transactional
+    @Override
+    public void unAssignTask(UUID taskId, UUID userId) {
+        var task = taskRepository.findById(taskId).orElseThrow(EntityNotFoundException::new);
+        var taskUser = userRepository.getReferenceById(userId);
+        task.getAssignedToUsers().remove(taskUser);
     }
 }

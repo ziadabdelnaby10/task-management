@@ -12,12 +12,11 @@ public interface TaskMapper {
 
     Task toEntity(AddTaskRequest request);
 
+    @Mapping(target = "createdByEmail" , source = "createdBy.email")
     TaskDto toDto(Task task);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Task partialUpdate(UpdateTaskRequest updateTaskRequest, @MappingTarget Task task);
-
-    Task toEntity(TaskDto taskDto);
 
     TaskUsersResponse toTaskUser(Task task);
 

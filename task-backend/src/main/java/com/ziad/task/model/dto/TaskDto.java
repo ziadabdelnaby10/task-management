@@ -1,6 +1,5 @@
 package com.ziad.task.model.dto;
 
-import com.ziad.task.model.entity.Task;
 import lombok.*;
 
 import java.io.Serializable;
@@ -18,7 +17,8 @@ public class TaskDto implements Serializable {
     UUID id;
     String title;
     String description;
-    Task.TaskStatus taskStats;
+    String priority;
+    String taskStats;
     LocalDateTime createdTime;
     LocalDateTime lastModifiedTime;
     LocalDate deadline;

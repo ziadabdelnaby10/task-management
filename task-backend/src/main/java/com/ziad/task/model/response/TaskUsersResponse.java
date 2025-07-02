@@ -12,7 +12,15 @@ import java.util.UUID;
 /**
  * DTO for {@link com.ziad.task.model.entity.Task}
  */
-public record TaskUsersResponse(UUID id, String title, String description, Task.TaskStatus taskStats,
-                                LocalDateTime createdTime, LocalDateTime lastModifiedTime, LocalDate deadline,
-                                UserDto createdBy, Set<UserDto> assignedToUsers) implements Serializable {
+public record TaskUsersResponse(
+        UUID id,
+        String title,
+        String description,
+        String priority,
+        String taskStats,
+        LocalDateTime createdTime,
+        LocalDateTime lastModifiedTime,
+        LocalDate deadline,
+        UserDto createdBy,
+        Set<UserDto> assignedToUsers) implements Serializable {
 }

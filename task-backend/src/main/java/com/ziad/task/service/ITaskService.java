@@ -7,6 +7,7 @@ import com.ziad.task.model.response.TaskUsersResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface ITaskService {
@@ -22,4 +23,10 @@ public interface ITaskService {
     Page<TaskDto> getAllTasks(Pageable pageable);
 
     TaskUsersResponse getTaskUsersById(UUID taskId);
+
+    TaskDto assignTaskToUser(UUID taskId, UUID userId);
+
+    TaskDto assignTaskToUsers(UUID taskId, List<UUID> userIds);
+
+    void unAssignTask(UUID taskId, UUID userId);
 }
