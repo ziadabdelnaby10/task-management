@@ -8,6 +8,7 @@ import com.ziad.task.model.response.UserTasksResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface IUserService {
@@ -19,7 +20,7 @@ public interface IUserService {
 
     UserDto getUserById(UUID userId);
 
-    Page<UserDto> getAllUsers(Pageable pageable);
+    List<UserDto> getAllUsers();
 
     UserTasksResponse getUserTasksById(UUID userId);
 }

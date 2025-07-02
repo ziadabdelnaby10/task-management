@@ -16,7 +16,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -53,8 +55,8 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Page<UserDto> getAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable).map(userMapper::toDto);
+    public List<UserDto> getAllUsers() {
+        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 
     @Override
