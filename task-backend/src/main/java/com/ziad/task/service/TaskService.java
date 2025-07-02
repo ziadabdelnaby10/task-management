@@ -1,16 +1,19 @@
 package com.ziad.task.service;
 
 import com.ziad.task.mapper.TaskMapper;
+import com.ziad.task.model.entity.Task;
 import com.ziad.task.model.request.UpdateTaskRequest;
 import com.ziad.task.model.request.AddTaskRequest;
 import com.ziad.task.model.dto.TaskDto;
 import com.ziad.task.model.response.TaskUsersResponse;
 import com.ziad.task.repository.TaskRepository;
 import com.ziad.task.repository.UserRepository;
+import com.ziad.task.specification.TaskSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,8 +60,19 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Page<TaskDto> getAllTasks(Pageable pageable) {
-        return taskRepository.findAll(pageable).map(taskMapper::toDto);
+    public Page<TaskDto> getAllTasks(Pageable pageable, String title, String description, String status, String priority) {
+        Specification<Task> taskSpecification = null;
+        if(title!= null && !title.isEmpty())
+            taskSpecification.and(TaskSpecification.filterTitle(title));
+        if(description != null && !description.isEmpty())
+            taskSpecification.and(TaskSpecification.filterDescription(description));
+        if(status != null && !status.isEmpty())
+            taskSpecification.and(TaskSpecification.filterStatus(status));
+        if(priority != null && !priority.isEmpty())
+            taskSpecification.and(TaskSpecification.filterPriority(priority));
+        if(taskSpecification == null)
+            return taskRepository.findAll(pageable).map(taskMapper::toDto);
+        return taskRepository.findAll(taskSpecification, pageable).map(taskMapper::toDto);
     }
 
     @Override

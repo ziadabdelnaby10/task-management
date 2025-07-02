@@ -6,7 +6,6 @@ import com.ziad.task.model.request.UpdateTaskRequest;
 import com.ziad.task.model.response.TaskUsersResponse;
 import com.ziad.task.service.TaskService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,8 +25,13 @@ public class TaskController {
     private final TaskService taskService;
 
     @GetMapping
-    public Page<TaskDto> getAllTasks(Pageable pageable) {
-        return taskService.getAllTasks(pageable);
+    public Page<TaskDto> getAllTasks(Pageable pageable
+            , @RequestParam(required = false) String title
+            , @RequestParam(required = false) String description
+            , @RequestParam(required = false) String status
+            , @RequestParam(required = false) String priority
+    ) {
+        return taskService.getAllTasks(pageable , title , description , status , priority);
     }
 
     @GetMapping("/{taskId}")
@@ -54,7 +58,7 @@ public class TaskController {
 
     @DeleteMapping("/{taskId}/unassign/{userId}")
     public ResponseEntity<Void> unassignTask(@PathVariable @Valid @NotNull UUID taskId, @PathVariable @Valid @NotNull UUID userId) {
-        taskService.unAssignTask(taskId , userId);
+        taskService.unAssignTask(taskId, userId);
         return ResponseEntity.accepted().build();
     }
 
@@ -65,11 +69,11 @@ public class TaskController {
 
     @PutMapping("/{taskId}/assign-user/{userId}")
     public ResponseEntity<TaskDto> assignUser(@PathVariable @Valid @NotNull UUID taskId, @PathVariable @Valid @NotNull UUID userId) {
-        return ResponseEntity.ok(taskService.assignTaskToUser(taskId , userId));
+        return ResponseEntity.ok(taskService.assignTaskToUser(taskId, userId));
     }
 
     @PutMapping("/{taskId}/assign-users")
     public ResponseEntity<TaskDto> assignUsers(@PathVariable @Valid @NotNull UUID taskId, @RequestBody @Valid List<UUID> userIds) {
-        return ResponseEntity.ok(taskService.assignTaskToUsers(taskId , userIds));
+        return ResponseEntity.ok(taskService.assignTaskToUsers(taskId, userIds));
     }
 }
