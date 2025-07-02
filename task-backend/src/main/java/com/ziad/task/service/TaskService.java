@@ -10,6 +10,10 @@ import com.ziad.task.repository.TaskRepository;
 import com.ziad.task.repository.UserRepository;
 import com.ziad.task.specification.TaskSpecification;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,6 +22,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -61,7 +66,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public Page<TaskDto> getAllTasks(Pageable pageable, String title, String description, String status, String priority) {
-        Specification<Task> taskSpecification = null;
+        Specification<Task> taskSpecification = TaskSpecification.filterTitle("");
         if(title!= null && !title.isEmpty())
             taskSpecification.and(TaskSpecification.filterTitle(title));
         if(description != null && !description.isEmpty())
@@ -70,8 +75,6 @@ public class TaskService implements ITaskService {
             taskSpecification.and(TaskSpecification.filterStatus(status));
         if(priority != null && !priority.isEmpty())
             taskSpecification.and(TaskSpecification.filterPriority(priority));
-        if(taskSpecification == null)
-            return taskRepository.findAll(pageable).map(taskMapper::toDto);
         return taskRepository.findAll(taskSpecification, pageable).map(taskMapper::toDto);
     }
 
