@@ -20,7 +20,7 @@ public interface ITaskService {
 
     TaskDto getTaskById(UUID taskId);
 
-    Page<TaskDto> getAllTasks(Pageable pageable, String title, String description, String status, String priority);
+    Page<TaskDto> getAllTasks(Pageable pageable, String search, String status, String priority);
 
     TaskUsersResponse getTaskUsersById(UUID taskId);
 

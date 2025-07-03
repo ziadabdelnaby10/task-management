@@ -4,6 +4,13 @@ A modern, responsive task management web application built with **React**, **Tai
 
 ---
 
+## Screenshots
+![Login Light](login-light.png)
+![Login Dark](login-dark.png)
+![Sign Up](sign%20up.png)
+![Task Dashboard](task%20dashboard.png)
+![New Task](new%20task.png)
+
 ## 🚀 Features
 
 - ✅ User authentication (Login / Signup with JWT)

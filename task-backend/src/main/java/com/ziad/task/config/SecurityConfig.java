@@ -63,6 +63,7 @@ public class SecurityConfig {
                         (requests) -> requests
                                 .requestMatchers(anyUser).permitAll()
                                 .requestMatchers(auth).permitAll()
+                                .requestMatchers(swagger).permitAll()
                                 .requestMatchers(anyAdmin).hasAnyRole(User.UserRole.ADMIN.toString(), User.UserRole.USER.toString())
                                 .requestMatchers(anyAdmin).hasAuthority(User.UserRole.ADMIN.toString())
                                 .anyRequest().authenticated()

@@ -19,7 +19,7 @@ const Dashboard = () => {
     }, [filters]);
 
     const handleChange = (e) => {
-        setFilters({ ...filters, [e.target.name]: e.target.value, page: 1 });
+        setFilters({ ...filters, [e.target.name]: e.target.value, page: 0 });
     };
 
     const changePage = (delta) => {

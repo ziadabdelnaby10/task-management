@@ -6,6 +6,10 @@ import com.ziad.task.model.request.AddUserRequest;
 import com.ziad.task.model.request.LoginRequest;
 import com.ziad.task.model.response.AuthenticationResponse;
 import com.ziad.task.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +34,9 @@ public class AuthController {
 
     private final UserService userService;
 
+    @Operation(summary = "Login")
+    @ApiResponse(responseCode = "202", description = "Login to the system",
+            content = @Content(schema = @Schema(implementation = LoginRequest.class)))
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid @NotNull LoginRequest loginRequest) {
         log.info("The User in login endpoint : {}", loginRequest != null ? loginRequest.toString() : "NONE");
@@ -46,6 +53,9 @@ public class AuthController {
         return new ResponseEntity<>(new AuthenticationResponse(new Date(), "Bearer", jwt.toString(), 123L), HttpStatus.ACCEPTED);
     }
 
+    @Operation(summary = "Register")
+    @ApiResponse(responseCode = "201", description = "Register to the system",
+            content = @Content(schema = @Schema(implementation = AddUserRequest.class)))
     @PostMapping("/register")
     public ResponseEntity<UserDto> createUser(@RequestBody @Valid AddUserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(request));

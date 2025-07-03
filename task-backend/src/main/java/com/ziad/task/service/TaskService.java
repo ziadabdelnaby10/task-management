@@ -10,10 +10,6 @@ import com.ziad.task.repository.TaskRepository;
 import com.ziad.task.repository.UserRepository;
 import com.ziad.task.specification.TaskSpecification;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +18,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -65,16 +60,18 @@ public class TaskService implements ITaskService {
     }
 
     @Override
-    public Page<TaskDto> getAllTasks(Pageable pageable, String title, String description, String status, String priority) {
-        Specification<Task> taskSpecification = TaskSpecification.filterTitle("");
-        if(title!= null && !title.isEmpty())
-            taskSpecification.and(TaskSpecification.filterTitle(title));
-        if(description != null && !description.isEmpty())
-            taskSpecification.and(TaskSpecification.filterDescription(description));
+    public Page<TaskDto> getAllTasks(Pageable pageable, String search, String status, String priority) {
+        Specification<Task> taskSpecification = Specification.where(null);
+        if(search!= null && !search.isEmpty())
+           taskSpecification = taskSpecification
+                   .or(TaskSpecification.filterTitle(search))
+                   .or(TaskSpecification.filterDescription(search))
+                   .or(TaskSpecification.filterStatus(status))
+                   .or(TaskSpecification.filterPriority(priority));
         if(status != null && !status.isEmpty())
-            taskSpecification.and(TaskSpecification.filterStatus(status));
+            taskSpecification = taskSpecification.and(TaskSpecification.filterStatus(status));
         if(priority != null && !priority.isEmpty())
-            taskSpecification.and(TaskSpecification.filterPriority(priority));
+            taskSpecification = taskSpecification.and(TaskSpecification.filterPriority(priority));
         return taskRepository.findAll(taskSpecification, pageable).map(taskMapper::toDto);
     }
 

@@ -1,5 +1,7 @@
 package com.ziad.task;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -12,6 +14,13 @@ import static org.springframework.data.web.config.EnableSpringDataWebSupport.Pag
 @EnableSpringDataWebSupport(pageSerializationMode = VIA_DTO)
 @EnableWebSecurity(debug = true)
 @EnableJpaAuditing
+@OpenAPIDefinition(
+        info = @Info(
+                title = "Task Management API",
+                version = "1.0",
+                description = "API documentation for my Task Management application"
+        )
+)
 public class TaskBackendApplication {
 
     public static void main(String[] args) {
